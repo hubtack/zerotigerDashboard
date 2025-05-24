@@ -36,6 +36,7 @@ app.all('/api', async (c: any) => {
     })
 
     const data = await response.json()
+    console.log('API Response:', { url: apiUrl, data })
     return new Response(JSON.stringify(data), {
       status: response.status,
       headers: {
@@ -44,6 +45,7 @@ app.all('/api', async (c: any) => {
       }
     })
   } catch (error: any) {
+    console.error('API Error:', error)
     return new Response(JSON.stringify({ error: error.toString() }), {
       status: 500,
       headers: {
@@ -54,7 +56,9 @@ app.all('/api', async (c: any) => {
   }
 })
 
-// 其它路径的请求转发给静态资源处理
+/**
+ * 静态资源处理器
+ */
 app.all('*', async (c: any) => {
   return await c.env.ASSETS.fetch(c.req.raw)
 })
